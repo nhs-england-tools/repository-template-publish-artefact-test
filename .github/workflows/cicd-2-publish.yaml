@@ -88,10 +88,10 @@ jobs:
         run: echo "secret_exist=${{ secrets.TEAMS_WEBHOOK_URL != '' }}" >> $GITHUB_OUTPUT
       - name: "Notify on publishing packages"
         if: steps.check.outputs.secret_exist == 'true'
-        uses: nhs-england-tools/notify-msteams-action@v${{ needs.metadata.outputs.version }}
+        uses: nhs-england-tools/repository-template-publish-artefact-test@v0.0.5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          message-title: "nhs-england-tools/notify-msteams-action@v${{ needs.metadata.outputs.version }}"
+          message-title: "nhs-england-tools/notify-msteams-action@v0.0.5"
           message-text: "A new version of this GitHub action has just been published."
           link: ${{ github.event.pull_request.html_url }}
