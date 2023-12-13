@@ -43,7 +43,7 @@ jobs:
   publish:
     name: "Publish artefact"
     runs-on: ubuntu-latest
-    needs: [metadata]
+    needs: [pull-request, metadata]
     timeout-minutes: 3
     steps:
       - name: "Checkout code"
