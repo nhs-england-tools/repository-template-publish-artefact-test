@@ -4,8 +4,6 @@ name: "CI/CD pull request"
 
 on:
   push:
-    branches:
-      - "**"
     branches-ignore:
       - "main"
   pull_request:
