@@ -52,8 +52,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: notify-msteams-action-dist
+          path: dist/
       - name: "Unzip artefact"
         run: |
+          pwd
           echo 1
           ls -la .
           echo 2
