@@ -54,9 +54,13 @@ jobs:
           name: notify-msteams-action-dist
       - name: "Unzip artefact"
         run: |
-          mkdir -p ./dist
-          rm -f ./dist/.gitkeep
-          unzip notify-msteams-action-dist.zip -d ./dist
+          echo 1
+          ls -la .
+          echo 2
+          ls -la ./dist
+          #mkdir -p ./dist
+          #rm -f ./dist/.gitkeep
+          #unzip notify-msteams-action-dist.zip -d ./dist
       - name: "Create release"
         id: create_release
         uses: actions/create-release@v1
