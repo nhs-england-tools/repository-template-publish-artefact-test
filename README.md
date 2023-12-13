@@ -1,103 +1,80 @@
-# Repository Template
+# Notify MSTeams Action
 
-[![CI/CD Pull Request](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml/badge.svg)](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=repository-template&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=repository-template)
+This GitHub action is designed to enable development teams to easily send notifications to an MS Teams channel from their build pipelines.
 
-Start with an overview or a brief description of what the project is about and what it does. For example -
-
-Welcome to our repository template designed to streamline your project setup! This robust template provides a reliable starting point for your new projects, covering an essential tech stack and encouraging best practices in documenting.
-
-This repository template aims to foster a user-friendly development environment by ensuring that every included file is concise and adequately self-documented. By adhering to this standard, we can promote increased clarity and maintainability throughout your project's lifecycle. Bundled within this template are resources that pave the way for seamless repository creation. Currently supported technologies are:
-
-- Terraform
-- Docker
-
-Make use of this repository template to expedite your project setup and enhance your productivity right from the get-go. Enjoy the advantage of having a well-structured, self-documented project that reduces overhead and increases focus on what truly matters - coding!
+This action uses typescript and is built from the [typescript-action](https://github.com/actions/typescript-action) baseline
 
 ## Table of Contents
 
-- [Repository Template](#repository-template)
+- [Notify MSTeams Action](#notify-msteams-action)
   - [Table of Contents](#table-of-contents)
-  - [Setup](#setup)
+  - [Installation](#installation)
+  - [To work on this repository](#to-work-on-this-repository)
     - [Prerequisites](#prerequisites)
-    - [Configuration](#configuration)
   - [Usage](#usage)
-    - [Testing](#testing)
-  - [Design](#design)
-    - [Diagrams](#diagrams)
-    - [Modularity](#modularity)
-  - [Contributing](#contributing)
   - [Contacts](#contacts)
   - [Licence](#licence)
 
-## Setup
+## Installation
 
-By including preferably a one-liner or if necessary a set of clear CLI instructions we improve user experience. This should be a frictionless installation process that works on various operating systems (macOS, Linux, Windows WSL) and handles all the dependencies.
+This action can be called as part of your [GitHub action](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) workflows. to achieve this follow these steps:
+
+Add the following section to your existing workflow file:
+
+```yml
+      - name: Testing action to notify Teams
+        uses: nhs-england-tools/notify-msteams-action@v0.0.4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          message-title: "Replace with an appropriate title"
+          message-text: "Replace with appropriate text"
+          link: https://google.com
+```
+
+Follow the instructions [to add an Incoming Webhook](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet) to the Teams channel of your choice.
+
+Add the webhook url from above as a [repository secret](https://docs.github.com/en/codespaces/managing-codespaces-for-your-organization/managing-encrypted-secrets-for-your-repository-and-organization-for-github-codespaces#adding-secrets-for-a-repository) with the following name:
+
+```shell
+TEAMS_WEBHOOK_URL
+```
+
+## To work on this repository
 
 Clone the repository
 
 ```shell
-git clone https://github.com/nhs-england-tools/repository-template.git
-cd nhs-england-tools/repository-template
+git clone https://github.com/nhs-england-tools/notify-msteams.git
+cd nhs-england-tools/notify-msteams
 ```
 
-### Prerequisites
-
-The following software packages, or their equivalents, are expected to be installed and configured:
-
-- [Docker](https://www.docker.com/) container runtime or a compatible tool, e.g. [Podman](https://podman.io/),
-- [asdf](https://asdf-vm.com/) version manager,
-- [GNU make](https://www.gnu.org/software/make/) 3.82 or later,
-- [GNU coreutils](https://www.gnu.org/software/coreutils/) and [GNU binutils](https://www.gnu.org/software/binutils/) may be required to build dependencies like Python, which may need to be compiled during installation. For macOS users, this has been scripted and automated by the `dotfiles` project; please see this [script](https://github.com/nhs-england-tools/dotfiles/blob/main/assets/20-install-base-packages.macos.sh) for details,
-- [Python](https://www.python.org/) required to run Git hooks,
-- [`jq`](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor.
-
-> [!NOTE]<br>
-> The version of GNU make available by default on macOS is earlier than 3.82. You will need to upgrade it or certain `make` tasks will fail. On macOS, you will need [Homebrew](https://brew.sh/) installed, then to install `make`, like so:
->
-> ```shell
-> brew install make
-> ```
->
-> You will then see instructions to fix your `$PATH` variable to make the newly installed version available. If you are using [dotfiles](https://github.com/nhs-england-tools/dotfiles), this is all done for you.
-
-### Configuration
-
-Installation and configuration of the toolchain dependencies
+Install and configure toolchain dependencies
 
 ```shell
 make config
 ```
 
+### Prerequisites
+
+The following software packages or their equivalents are expected to be installed
+
+- [node](https://nodejs.org/en/download)
+
 ## Usage
 
-After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
+The steps above detail how to quickly use this action within your repository. The following attributes can be provided to further control the output of your notification:
 
-### Testing
+- github-token - use the default [GitHub token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow)
+- teams-webhook-url - this is the URL provided by MS Teams when you configured the incoming webhook
+- message-title - the title for your message - this will be displayed in the notification
+- message-text - the text for your message - this will be displayed in the notification
+- message-colour - The colour to use for the header line in the notification
+- link - optional if required provide a link to be presented in the notification
 
-There are `make` tasks for you to configure to run your tests.  Run `make test` to see how they work.  You should be able to use the same entry points for local development as in your CI pipeline.
+An example of how the notification could appear in Microsoft Teams is provided:
 
-## Design
-
-### Diagrams
-
-The [C4 model](https://c4model.com/) is a simple and intuitive way to create software architecture diagrams that are clear, consistent, scalable and most importantly collaborative. This should result in documenting all the system interfaces, external dependencies and integration points.
-
-![Repository Template](./docs/diagrams/Repository_Template_GitHub_Generic.png)
-
-### Modularity
-
-Most of the projects are built with customisability and extendability in mind. At a minimum, this can be achieved by implementing service level configuration options and settings. The intention of this section is to show how this can be used. If the system processes data, you could mention here for example how the input is prepared for testing - anonymised, synthetic or live data.
-
-## Contributing
-
-Describe or link templates on how to raise an issue, feature request or make a contribution to the codebase. Reference the other documentation files, like
-
-- Environment setup for contribution, i.e. `CONTRIBUTING.md`
-- Coding standards, branching, linting, practices for development and testing
-- Release process, versioning, changelog
-- Backlog, board, roadmap, ways of working
-- High-level requirements, guiding principles, decision records, etc.
+![Microsoft Teams notification showing the adaptive card being displayed to the user for a "Pull request opened" event](docs/images/msteams-action-notification.png)
 
 ## Contacts
 
