@@ -1,14 +1,14 @@
 name: "CI/CD publish"
 
 on:
-  workflow_run:
-    workflows: ["CI/CD pull request"]
-    types:
-      - completed
+  push:
     branches:
-      - main
+      - "main"
 
 jobs:
+  pull-request:
+    uses: ./.github/workflows/cicd-1-pull-request.yaml
+    secrets: inherit
   metadata:
     name: "Set CI/CD metadata"
     runs-on: ubuntu-latest
