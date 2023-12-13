@@ -8,6 +8,7 @@ on:
       - "main"
   pull_request:
     types: [opened, reopened]
+  workflow_call:
 
 jobs:
   metadata:
